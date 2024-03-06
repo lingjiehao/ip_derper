@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 CERT_HOST=$1
 CERT_DIR=$2
