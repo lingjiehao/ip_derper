@@ -13,6 +13,14 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        DOCKER_FILE: ['Dockerfile', 'Dockerfile.alpine']
+        include:
+            - DOCKER_FILE: 'Dockerfile'
+              DOCKER_TAG: 'latest'
+            - DOCKER_FILE: 'Dockerfile.alpine'
+              DOCKER_TAG: 'alpine'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -39,19 +47,10 @@ jobs:
       - name: Build and push Docker images
         uses: docker/build-push-action@v5
         with:
-          file: 'Dockerfile'
+          file: ${{ matrix.DOCKER_FILE }}
           platforms: linux/arm64, linux/amd64
           context: ./
           push: true
           tags: |
-            ${{ secrets.DOCKER_USERNAME }}/ip_derper:latest
+            ${{ secrets.DOCKER_USERNAME }}/ip_derper:${{ matrix.DOCKER_TAG }}
 
-      - name: Build and push Docker alpine images
-        uses: docker/build-push-action@v5
-        with:
-          file: 'Dockerfile.alpine'
-          platforms: linux/arm64, linux/amd64
-          context: ./
-          push: true
-          tags: |
-            ${{ secrets.DOCKER_USERNAME }}/ip_derper:alpine
