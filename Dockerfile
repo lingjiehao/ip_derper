@@ -12,10 +12,6 @@ RUN cd /app/tailscale/cmd/derper && \
     cd /app && \
     rm -rf /app/tailscale
 
-FROM backplane/upx:latest AS upx
-COPY --from=builder /app/derper /app/derper
-RUN upx --best /app/derper
-
 FROM ubuntu:20.04
 WORKDIR /app
 
@@ -34,7 +30,7 @@ RUN apt-get update && \
     apt-get install -y openssl curl
 
 COPY build_cert.sh /app/
-COPY --from=upx /app/derper /app/derper
+COPY --from=builder /app/derper /app/derper
 
 # build self-signed certs && start derper
 CMD bash /app/build_cert.sh $DERP_HOST $DERP_CERTS /app/san.conf && \
