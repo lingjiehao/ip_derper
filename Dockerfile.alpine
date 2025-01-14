@@ -1,6 +1,6 @@
 FROM golang:alpine AS builder
 
-LABEL org.opencontainers.image.source https://github.com/lingjiehao/ip_derper
+LABEL org.opencontainers.image.source=https://github.com/lingjiehao/ip_derper
 
 WORKDIR /app
 
@@ -17,12 +17,12 @@ WORKDIR /app
 
 # ========= CONFIG =========
 # - derper args
-ENV DERP_ADDR :443
-ENV DERP_HTTP_PORT 80
-ENV DERP_HOST=127.0.0.1
-ENV DERP_CERTS=/app/certs/
-ENV DERP_STUN true
-ENV DERP_VERIFY_CLIENTS false
+ENV DERP_ADDR=:443 \
+    DERP_HTTP_PORT=80 \
+    DERP_HOST=127.0.0.1 \
+    DERP_CERTS=/app/certs/ \
+    DERP_STUN=true \
+    DERP_VERIFY_CLIENTS=false
 # ==========================
 
 # apt
