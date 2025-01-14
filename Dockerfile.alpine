@@ -12,6 +12,10 @@ RUN cd /app/tailscale/cmd/derper && \
     cd /app && \
     rm -rf /app/tailscale
 
+FROM backplane/upx:latest AS upx
+COPY --from=builder /app/derper /app/derper
+RUN upx --best /app/derper
+
 FROM alpine:latest
 WORKDIR /app
 
@@ -29,7 +33,7 @@ ENV DERP_ADDR=:443 \
 RUN apk add --no-cache openssl curl
 
 COPY build_cert.sh /app/
-COPY --from=builder /app/derper /app/derper
+COPY --from=upx /app/derper /app/derper
 
 # build self-signed certs && start derper
 CMD sh /app/build_cert.sh $DERP_HOST $DERP_CERTS /app/san.conf && \
