@@ -30,6 +30,7 @@ jobs:
         git pull --recurse-submodules
         git submodule update --remote --recursive
         latest_release=$(curl -sSL https://api.github.com/repos/tailscale/tailscale/releases/latest | jq -r '.tag_name')
+        echo "latest_release=$latest_release" >> $GITHUB_ENV
         cd tailscale && git checkout $latest_release && cd ..
 
     - name: Commit update
