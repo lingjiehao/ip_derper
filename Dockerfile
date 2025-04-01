@@ -4,13 +4,15 @@ LABEL org.opencontainers.image.source=https://github.com/yangchuansheng/ip_derpe
 
 WORKDIR /app
 
-ADD tailscale /app/tailscale
+ADD . /app
+
+RUN apt-get update && \
+    apt-get install -y git && \
+    git config --global --add safe.directory /app
 
 # build modified derper
-RUN cd /app/tailscale/cmd/derper && \
-    CGO_ENABLED=0 /usr/local/go/bin/go build -buildvcs=false -ldflags "-s -w" -o /app/derper && \
-    cd /app && \
-    rm -rf /app/tailscale
+RUN cd /app/tailscale && \
+    ./build_dist.sh --extra-small -buildvcs=false -o /app/derper tailscale.com/cmd/derper
 
 FROM ubuntu:20.04
 WORKDIR /app
