@@ -1,4 +1,4 @@
-FROM golang:latest AS builder
+FROM golang:1.26-bookworm AS builder
 
 LABEL org.opencontainers.image.source=https://github.com/yangchuansheng/ip_derper
 
@@ -14,7 +14,7 @@ RUN apt-get update && \
 RUN cd /app/tailscale && \
     ./build_dist.sh --extra-small -buildvcs=false -o /app/derper tailscale.com/cmd/derper
 
-FROM ubuntu:20.04
+FROM ubuntu:24.04
 WORKDIR /app
 
 # ========= CONFIG =========

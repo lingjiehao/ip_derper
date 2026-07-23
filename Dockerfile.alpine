@@ -1,5 +1,4 @@
-FROM golang:alpine AS builder
-
+FROM golang:1.26-alpine3.24 AS builder
 LABEL org.opencontainers.image.source=https://github.com/lingjiehao/ip_derper
 
 WORKDIR /app
@@ -13,7 +12,7 @@ RUN apk add git && \
 RUN cd /app/tailscale && \
     ./build_dist.sh --extra-small -buildvcs=false -o /app/derper tailscale.com/cmd/derper
 
-FROM alpine:latest
+FROM alpine:3.24
 WORKDIR /app
 
 # ========= CONFIG =========
